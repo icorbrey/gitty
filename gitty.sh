@@ -14,7 +14,7 @@ function gitty()
 
         "compare-current")
             _base_branch=$2
-            _gitty_compare $_base_branch $(_gitty_echo-current-branch)
+            _gitty_compare $_base_branch $(_gitty_echo_current_branch)
             ;;
 
         "fast-forward")
@@ -30,7 +30,7 @@ function gitty()
 
         "rename-current-branch")
             _new_branch=$2
-            _gitty_rename_branch $(_gitty_echo-current-branch) $_new_branch
+            _gitty_rename_branch $(_gitty_echo_current_branch) $_new_branch
             ;;
 
         *)
@@ -111,7 +111,7 @@ usage: gitty <subcommand> [options]
     echo "$_usage"
 }
 
-function _gitty_echo-current-branch()
+function _gitty_echo_current_branch()
 {
     git rev-parse --abbrev-ref HEAD
 }
