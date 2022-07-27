@@ -2,6 +2,14 @@
 
 Quality of life utility scripts for Git.
 
+## Installation
+
+```
+git clone https://github.com/icorbrey/gitty.git
+cd ./gitty
+./install.sh
+```
+
 ## Usage
 
 ### Compare two branches
@@ -33,14 +41,6 @@ Renames the old branch and pushes the new branch to origin.
 `gitty rename-current-branch <new branch>`
 
 Renames the current branch and pushes the new branch to origin.
-
-## Installation
-
-```
-git clone https://github.com/icorbrey/gitty.git
-cd ./gitty
-./install.sh
-```
 
 ## License
 
