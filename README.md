@@ -12,6 +12,12 @@ cd ./gitty
 
 ## Usage
 
+### See usage details
+
+`gitty`
+
+Displays usage details
+
 ### Compare two branches
 
 `gitty compare <base branch> <target branch>`
