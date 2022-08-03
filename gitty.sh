@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/bash
+
+alias _gitty_to-lower="tr '[:upper:]' '[:lower:]'"
+alias _gitty_replace-whitespace="sed 's/ \+/-/g'"
+alias _gitty_remove-special-characters="tr -cd '[:alnum:]._-'"
 
 function gitty()
 {
@@ -14,7 +18,7 @@ function gitty()
 
         "compare-current")
             _base_branch=$2
-            _gitty_compare $_base_branch $(_gitty_echo_current_branch)
+            _gitty_compare $_base_branch $(_gitty_echo-current-branch)
             ;;
 
         "fast-forward")
@@ -30,7 +34,12 @@ function gitty()
 
         "rename-current-branch")
             _new_branch=$2
-            _gitty_rename_branch $(_gitty_echo_current_branch) $_new_branch
+            _gitty_rename_branch $(_gitty_echo-current-branch) $_new_branch
+            ;;
+
+        "new")
+            _type=$2
+            _gitty_new_branch $_type
             ;;
 
         *)
@@ -85,6 +94,23 @@ function _gitty_rename_branch()
     git push origin -u $new_branch
 }
 
+function _gitty_new_branch()
+{
+    branch_type=$1
+    read -p "Branch #: " branch_number
+    read -p "Branch title: " branch_title
+
+    formatted_title=$(echo $branch_title \
+        | _gitty_to-lower \
+        | _gitty_replace-whitespace \
+        | _gitty_remove-special-characters)
+
+    branch="$branch_type/$branch_number/$formatted_title"
+
+    git checkout -b $branch
+    git push -u origin $branch
+}
+
 function _gitty_help()
 {
     _usage="
@@ -106,12 +132,15 @@ usage: gitty <subcommand> [options]
 
     rename-current-branch <new branch>
         Renames the current branch and pushes the new branch to origin.
+
+    new <branch type>
+        Creates a new branch in the format <type>/<number>/<kebab-title>.
     "
 
     echo "$_usage"
 }
 
-function _gitty_echo_current_branch()
+function _gitty_echo-current-branch()
 {
     git rev-parse --abbrev-ref HEAD
 }
