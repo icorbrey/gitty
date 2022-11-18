@@ -37,10 +37,14 @@ function gitty()
             _gitty_rename_branch $(_gitty_echo-current-branch) $_new_branch
             ;;
 
-        "new")
+    "review")
+        _gitty_review
+        ;;
+
+    "new")
             _type=$2
-            _gitty_new_branch $_type
-            ;;
+        _gitty_new_branch $_type
+        ;;
 
         *)
             _gitty_help
@@ -111,6 +115,21 @@ function _gitty_new_branch()
     git push -u origin $branch
 }
 
+function _gitty_review()
+{
+    start_date=$(date -d "$day -$(date -d $(printf '%(%Y-%m-%d)T\n' -1) +%w) days" +"%Y-%m-%d")
+    user=$(git config user.name)
+    
+    git log \
+        --all \
+        --reverse \
+        --no-merges \
+        --pretty=format:"%ad | %s" \
+        --date=format:"%a %I:%M %p" \
+        --after="$start_date" \
+        --author="$user"
+}
+
 function _gitty_help()
 {
     _usage="
@@ -132,6 +151,9 @@ usage: gitty <subcommand> [options]
 
     rename-current-branch <new branch>
         Renames the current branch and pushes the new branch to origin.
+
+    review
+        Prints the list of commits made by the configured Git user this week.
 
     new <branch type>
         Creates a new branch in the format <type>/<number>/<kebab-title>.
