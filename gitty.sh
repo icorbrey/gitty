@@ -26,6 +26,10 @@ function gitty()
             _gitty_fast_forward $_source_branch
             ;;
 
+    "hard-reset")
+	_gitty_hard-reset
+	;;
+
         "rename-branch")
             _old_branch=$2
             _new_branch=$3
@@ -130,6 +134,14 @@ function _gitty_review()
         --author="$user"
 }
 
+function _gitty_hard-reset()
+{
+    current_branch=$(_gitty_echo-current-branch)
+
+    git fetch origin
+    git reset --hard "origin/$current_branch"
+}
+
 function _gitty_help()
 {
     _usage="
@@ -145,6 +157,10 @@ usage: gitty <subcommand> [options]
 
     fast-forward <source branch>
         Updates the source branch and merges it into the current branch.
+
+    hard-reset
+        Resets the current branch to exactly match its most up-to-date counterpart
+	    on the remote.
 
     rename-branch <old branch> <new branch>
         Renames the old branch and pushes the new branch to origin.
